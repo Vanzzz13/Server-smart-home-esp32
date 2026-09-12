@@ -1,10 +1,28 @@
-# ESP32-S3 Smart Home Voice — Groq Whisper
+# Smart Home Voice - ESP32-S3 + INMP441 + Railway + Groq Whisper
 
-Arsitektur:
-INMP441 -> ESP32-S3 -> Wi-Fi -> Railway -> Groq Whisper -> Railway -> ESP32-S3 -> Relay 1-4
+Cloud-only voice control for 4 relays.
 
-## Hardware
+## Commands
+- nyalakan output 1
+- matikan output 1
+- nyalakan output 2
+- matikan output 2
+- nyalakan output 3
+- matikan output 3
+- nyalakan output 4
+- matikan output 4
 
+## Railway
+Deploy `server/` as the Railway service root directory.
+Variables:
+- GROQ_API_KEY
+- DEVICE_TOKEN
+
+Generate a public Railway domain, then put:
+`https://YOUR-DOMAIN/api/voice`
+into `esp32/smart_home_voice.ino`.
+
+## Wiring
 INMP441:
 - VDD -> 3V3
 - GND -> GND
@@ -13,66 +31,15 @@ INMP441:
 - SD -> GPIO17
 - L/R -> GND
 
-Relay 4CH:
+Relay:
 - IN1 -> GPIO4
 - IN2 -> GPIO5
 - IN3 -> GPIO6
 - IN4 -> GPIO7
 - GND -> GND
-- VCC -> 5V
+- VCC -> suitable 5V supply
 
-Default relay logic in sketch: active LOW.
+Most relay modules are active LOW; change RELAY_ON/OFF if yours is different.
 
-## Railway
-
-Variables:
-GROQ_API_KEY=gsk_...
-DEVICE_TOKEN=buat-token-acak-sendiri
-
-Deploy service dari folder `server`.
-
-Generate public domain Railway, lalu set:
-SERVER_URL = "https://DOMAIN-RAILWAY/api/voice"
-
-## Groq
-
-Model STT:
-whisper-large-v3-turbo
-
-API key hanya disimpan di Railway. Jangan taruh GROQ_API_KEY di ESP32.
-
-## ESP32
-
-Edit:
-- WIFI_SSID
-- WIFI_PASSWORD
-- SERVER_URL
-- DEVICE_TOKEN
-
-Board yang umum:
-ESP32S3 Dev Module
-
-Perintah:
-- Nyalakan output 1
-- Matikan output 1
-- Nyalakan output 2
-- Matikan output 2
-- Nyalakan output 3
-- Matikan output 3
-- Nyalakan output 4
-- Matikan output 4
-
-Juga mendukung variasi angka seperti:
-- output satu
-- relay dua
-- output tiga
-- relay empat
-
-## Catatan keselamatan
-
-Untuk pengujian awal gunakan beban DC tegangan rendah.
-Jangan merakit 220V PLN di breadboard. Untuk listrik PLN gunakan enclosure, proteksi, terminal, kabel, relay dengan rating yang sesuai, dan prosedur keselamatan listrik yang benar.
-
-## Catatan keamanan HTTPS
-
-Sketch menggunakan `client.setInsecure()` untuk memudahkan prototipe HTTPS. Ini tidak memverifikasi sertifikat server. Untuk deployment permanen, gunakan verifikasi CA certificate.
+## Safety
+Do initial tests with a low-voltage DC load. Do not expose or breadboard mains wiring.

@@ -1,9 +1,5 @@
+.env
+*.env
 __pycache__/
 *.pyc
-.venv/
-venv/
-.env
-*.bin
-*.elf
-*.map
-secrets.txt
+.vscode/
